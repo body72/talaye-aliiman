@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حضانة طلائع الإيمان | بوابة الخدمات والاشتراكات</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts - Cairo -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            pink: '#d81b60',
+                            pinkDark: '#b0124a',
+                            blue: '#1565c0',
+                            gold: '#fbc02d',
+                            lightBg: '#fff5f8'
+                        }
+                    },
+                    fontFamily: {
+                        cairo: ['Cairo', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #fafafa;
+            background-image: radial-gradient(#d81b60 0.5px, transparent 0.5px), radial-gradient(#1565c0 0.5px, #fafafa 0.5px);
+            background-size: 20px 20px;
+            background-position: 0 0, 10px 10px;
+        }
+        .watermark-bg {
+            position: relative;
+        }
+        .watermark-bg::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 100 100"><text x="10" y="50" font-family="Cairo" font-size="14" fill="%23d81b60" opacity="0.04" font-weight="bold">طلائع الإيمان</text></svg>');
+            background-repeat: repeat;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .tab-btn.active {
+            background-color: #d81b60;
+            color: white;
+            box-shadow: 0 4px 12px rgba(216, 27, 96, 0.3);
+        }
+    </style>
+</head>
+<body class="text-gray-800 watermark-bg min-h-screen flex flex-col justify-between">
+
+    <!-- الهيدر الرئيسي -->
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-pink-100 shadow-sm">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between flex-wrap gap-4">
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 bg-pink-100 rounded-full flex items-center justify-center border-2 border-brand-pink text-brand-pink font-extrabold text-xl shadow-sm">
+                    ✨
+                </div>
+                <div>
+                    <h1 class="text-2xl font-black text-brand-pink tracking-wide">حضانة طلائع الإيمان</h1>
+                    <p class="text-xs text-gray-500 font-bold">بيئة آمنة.. تربية متكاملة.. مستقبل واعد</p>
+                </div>
+            </div>
+
+            <nav class="flex items-center gap-2 bg-pink-50/80 p-1.5 rounded-full border border-pink-100">
+                <button onclick="switchTab('parent')" id="tab-parent" class="tab-btn active px-5 py-2 rounded-full font-bold text-sm transition-all flex items-center gap-2">
+                    <i class="fa-solid font-bold fa-user-graduate"></i> بوابة ولي الأمر
+                </button>
+                <button onclick="switchTab('register')" id="tab-register" class="tab-btn text-gray-600 px-5 py-2 rounded-full font-bold text-sm transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-pen-to-square"></i> تسجيل طفل جديد
+                </button>
+                <button onclick="switchTab('admin')" id="tab-admin" class="tab-btn text-gray-600 px-5 py-2 rounded-full font-bold text-sm transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-user-shield"></i> لوحة الإدارة
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- محتوى التطبيق -->
+    <main class="max-w-6xl mx-auto px-4 py-8 flex-grow relative z-10 w-full">
+
+        <!-- 1. بوابة ولي الأمر -->
+        <section id="section-parent" class="space-y-6">
+            <div class="bg-white p-6 rounded-3xl shadow-sm border border-pink-100 flex flex-col md:flex-row items-center justify-between gap-4">
+                <div>
+                    <h2 class="text-xl font-extrabold text-brand-blue flex items-center gap-2">
+                        <i class="fa-solid fa-child-circle-check text-brand-pink"></i> متابعة بيانات الطفل والاشتراك
+                    </h2>
+                    <p class="text-sm text-gray-500">أدخل كود الطفل الخاص بك لمتابعة التقدم والاشتراكات</p>
+                </div>
+                <div class="flex items-center gap-2 w-full md:w-auto">
+                    <input type="text" id="studentCodeInput" placeholder="أدخل كود الطفل (مثال: TAL-101)" class="w-full md:w-64 px-4 py-2.5 rounded-xl border border-pink-200 focus:outline-none focus:ring-2 focus:ring-brand-pink text-sm font-bold">
+                    <button onclick="searchStudent()" class="bg-brand-pink hover:bg-brand-pinkDark text-white px-5 py-2.5 rounded-xl font-bold text-sm transition-all shadow-md shrink-0">
+                        بحث
+                    </button>
+                </div>
+            </div>
+
+            <div id="studentProfileCard" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="bg-white p-6 rounded-3xl shadow-sm border border-pink-100 text-center flex flex-col items-center">
+                    <div class="relative mb-4">
+                        <div class="w-32 h-32 rounded-full bg-pink-50 border-4 border-brand-pink flex items-center justify-center overflow-hidden shadow-inner">
+                            <img id="childPhotoPreview" src="https://via.placeholder.com/150?text=صورة+الطفل" alt="صورة الطفل" class="w-full h-full object-cover">
+                        </div>
+                        <label for="childPhotoUpload" class="absolute bottom-0 right-0 bg-brand-blue text-white w-9 h-9 rounded-full flex items-center justify-center cursor-pointer shadow-md hover:bg-blue-700 transition-all">
+                            <i class="fa-solid fa-camera text-sm"></i>
+                        </label>
+                        <input type="file" id="childPhotoUpload" class="hidden" accept="image/*" onchange="uploadChildPhoto(event)">
+                    </div>
+                    <h3 id="displayChildName" class="text-2xl font-black text-gray-800">أحمد محمود علي</h3>
+                    <p id="displayStudentCode" class="text-xs font-bold text-brand-blue bg-blue-50 px-3 py-1 rounded-full mt-1">كود الطالب: TAL-101</p>
+                    
+                    <div class="w-full mt-6 pt-6 border-t border-gray-100 text-right space-y-3 text-sm">
+                        <p class="flex justify-between"><span class="text-gray-500 font-bold">تاريخ الميلاد:</span> <span id="displayBirthDate" class="font-bold">2021-05-12</span></p>
+                        <p class="flex justify-between"><span class="text-gray-500 font-bold">العمر الحالي:</span> <span id="displayAge" class="font-bold text-brand-pink">5 سنوات و2 شهر</span></p>
+                        <p class="flex justify-between"><span class="text-gray-500 font-bold">ولي الأمر:</span> <span id="displayGuardian" class="font-bold">محمود علي</span></p>
+                        <p class="flex justify-between"><span class="text-gray-500 font-bold">اشتراك الباص:</span> <span id="displayBusStatus" class="font-bold text-green-600">مشترك (العامري - الحرير)</span></p>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-2 space-y-6">
+                    <div id="paymentReminderBox" class="bg-gradient-to-r from-amber-500 to-amber-600 text-white p-5 rounded-3xl shadow-md flex items-center justify-between gap-4">
+                        <div class="flex items-center gap-3">
+                            <i class="fa-solid fa-bell text-3xl animate-bounce"></i>
+                            <div>
+                                <h4 class="font-extrabold text-lg">تذكير بموعد الاشتراك الشهري</h4>
+                                <p class="text-xs text-amber-100 font-semibold">متبقي <span id="daysRemaining" class="underline font-black text-white text-sm">5 أيام</span> على انتهاء الاشتراك الشهري. يُرجى التجديد لتفادي الانقطاع.</p>
+                            </div>
+                        </div>
+                        <button onclick="scrollToPayment()" class="bg-white text-amber-700 px-4 py-2 rounded-xl text-xs font-extrabold shrink-0 shadow-sm hover:bg-amber-50 transition-all">
+                            سداد الآن
+                        </button>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-3xl shadow-sm border border-pink-100">
+                        <h4 class="font-extrabold text-lg text-brand-blue mb-4 flex items-center gap-2">
+                            <i class="fa-solid fa-star text-brand-gold"></i> مستوى تقدم الطفل هذا الشهر
+                        </h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="bg-pink-50/50 p-4 rounded-2xl border border-pink-100">
+                                <p class="text-xs text-gray-500 font-bold mb-1">القرآن والآداب الإسلامية</p>
+                                <div class="flex items-center justify-between">
+                                    <span class="font-extrabold text-brand-pink text-sm">حفظ سورة الأعلى + الآداب</span>
+                                    <span class="text-xs font-bold bg-green-100 text-green-700 px-2.5 py-0.5 rounded-full">ممتاز ⭐</span>
+                                </div>
+                            </div>
+                            <div class="bg-blue-50/50 p-4 rounded-2xl border border-blue-100">
+                                <p class="text-xs text-gray-500 font-bold mb-1">اللغة العربية والإنجليزي</p>
+                                <div class="flex items-center justify-between">
+                                    <span class="font-extrabold text-brand-blue text-sm">مستوى الحروف والكلمات</span>
+                                    <span class="text-xs font-bold bg-blue-100 text-blue-700 px-2.5 py-0.5 rounded-full">جيد جداً 👍</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="paymentSection" class="bg-white p-6 rounded-3xl shadow-sm border border-pink-100">
+                        <h4 class="font-extrabold text-lg text-brand-pink mb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-wallet"></i> تجديد الاشتراك الشهري والباص
+                        </h4>
+                        <p class="text-xs text-gray-500 mb-4">يتم دفع الاشتراكات عن طريق المحفظة الإلكترونية التالية ثم رفع صورة الإيصال:</p>
+
+                        <div class="bg-pink-50 p-4 rounded-2xl border border-pink-200 flex items-center justify-between mb-4">
+                            <div>
+                                <p class="text-xs text-gray-500 font-bold">رقم محفظة كاش للتجميع والسداد:</p>
+                                <p id="walletNumber" class="text-xl font-black text-brand-pink tracking-wider">01287666213</p>
+                            </div>
+                            <button onclick="copyWallet()" class="bg-brand-pink text-white text-xs px-3 py-2 rounded-xl font-bold hover:bg-brand-pinkDark transition-all">
+                                <i class="fa-solid fa-copy"></i> نسخ الرقم
+                            </button>
+                        </div>
+
+                        <form onsubmit="handlePaymentSubmit(event)" class="space-y-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-700 mb-1">نوع الاشتراك المطلوب *</label>
+                                    <select id="payPlan" class="w-full px-3 py-2 rounded-xl border border-pink-200 text-sm font-bold">
+                                        <option value="basic">اشتراك الروضة الأساسي (600 ج.م)</option>
+                                        <option value="bus_full">الروضة + الباص ذهاب وعودة (950 ج.م)</option>
+                                        <option value="bus_one">الروضة + الباص اتجاه واحد (800 ج.م)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-700 mb-1">رفع صورة إيصال التحويل *</label>
+                                    <input type="file" id="payReceipt" required class="w-full text-xs text-gray-500 border border-pink-200 rounded-xl p-2 bg-pink-50/30">
+                                </div>
+                            </div>
+                            <button type="submit" class="w-full bg-brand-blue hover:bg-blue-700 text-white py-3 rounded-xl font-extrabold text-sm transition-all shadow-md">
+                                تأكيد وإرسال إشعار السداد للإدارة
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. تسجيل طفل جديد -->
+        <section id="section-register" class="hidden space-y-6">
+            <div class="bg-white p-8 rounded-3xl shadow-sm border border-pink-100 max-w-3xl mx-auto">
+                <div class="text-center mb-6">
+                    <h2 class="text-2xl font-black text-brand-pink">طلب تسجيل طفل جديد</h2>
+                    <p class="text-xs text-gray-500 font-bold mt-1">قم بملء البيانات وسنقوم بتفعيل حساب طفلك فوراً</p>
+                </div>
+
+                <form id="registrationForm" onsubmit="handleRegister(event)" class="space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">اسم الطفل بالكامل *</label>
+                            <input type="text" id="regChildName" required placeholder="اسم الطفل ثلاثي" class="w-full px-4 py-2.5 rounded-xl border border-pink-200 text-sm font-semibold focus:ring-2 focus:ring-brand-pink focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">تاريخ الميلاد *</label>
+                            <input type="date" id="regBirthDate" required class="w-full px-4 py-2.5 rounded-xl border border-pink-200 text-sm font-semibold focus:ring-2 focus:ring-brand-pink focus:outline-none">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">اسم ولي الأمر *</label>
+                            <input type="text" id="regGuardian" required placeholder="اسم الأب أو الأم" class="w-full px-4 py-2.5 rounded-xl border border-pink-200 text-sm font-semibold focus:ring-2 focus:ring-brand-pink focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">رقم الهاتف والتواصل *</label>
+                            <input type="tel" id="regPhone" required placeholder="01XXXXXXXXX" class="w-full px-4 py-2.5 rounded-xl border border-pink-200 text-sm font-semibold focus:ring-2 focus:ring-brand-pink focus:outline-none">
+                        </div>
+                    </div>
+
+                    <div class="bg-blue-50/60 p-4 rounded-2xl border border-blue-100 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <label class="text-sm font-bold text-brand-blue flex items-center gap-2">
+                                <i class="fa-solid fa-bus text-brand-pink"></i> هل ترغب في الاشتراك بباص الحضانة؟
+                            </label>
+                            <select id="regBusOpt" onchange="toggleBusLocationRequirement()" class="px-3 py-1.5 rounded-xl border border-blue-200 text-xs font-bold">
+                                <option value="no">لا، بدون باص</option>
+                                <option value="yes_two">نعم، ذهاب وعودة</option>
+                                <option value="yes_one">نعم، اتجاه واحد فقط</option>
+                            </select>
+                        </div>
+
+                        <div id="busAreaContainer" class="hidden">
+                            <label class="block text-xs font-bold text-red-600 mb-1">عنوان المنطقة والشارع بالتفصيل للباص (إجباري) *</label>
+                            <input type="text" id="regBusArea" placeholder="مثال: الحرير الصناعي - بجوار مسجد الرحمة - شارع 10" class="w-full px-4 py-2.5 rounded-xl border border-red-200 bg-white text-sm font-semibold focus:ring-2 focus:ring-red-400 focus:outline-none">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full bg-brand-pink hover:bg-brand-pinkDark text-white py-3.5 rounded-xl font-black text-base transition-all shadow-md mt-4">
+                        إرسال وفتح التفعيل عبر واتساب
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <!-- 3. لوحة تحكم الإدارة -->
+        <section id="section-admin" class="hidden space-y-6">
+            <div class="bg-white p-6 rounded-3xl shadow-sm border border-pink-100">
+                <div class="flex flex-col md:flex-row items-center justify-between gap-4 mb-6">
+                    <div>
+                        <h2 class="text-xl font-black text-brand-blue flex items-center gap-2">
+                            <i class="fa-solid fa-user-gear text-brand-pink"></i> لوحة الإدارة والتحكم الشاملة
+                        </h2>
+                        <p class="text-xs text-gray-500">إدارة سجلات الطلاب، الاشتراكات، وتصدير التقارير الكاملة</p>
+                    </div>
+                    <button onclick="exportAllClientsToCSV()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-xl text-xs font-black transition-all flex items-center gap-2 shadow-sm">
+                        <i class="fa-solid fa-file-excel text-base"></i> تصدير كل بيانات العملاء (Excel/CSV)
+                    </button>
+                </div>
+
+                <div class="overflow-x-auto rounded-2xl border border-gray-100">
+                    <table class="w-full text-right text-xs">
+                        <thead class="bg-pink-50 text-brand-pink font-extrabold uppercase">
+                            <tr>
+                                <th class="p-3">كود الطالب</th>
+                                <th class="p-3">اسم الطفل</th>
+                                <th class="p-3">ولي الأمر</th>
+                                <th class="p-3">الهاتف</th>
+                                <th class="p-3">اشتراك الباص</th>
+                                <th class="p-3">منطقة الباص</th>
+                                <th class="p-3">حالة الدفع</th>
+                                <th class="p-3 text-center">إجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminStudentsTable" class="divide-y divide-gray-100 font-semibold"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-white border-t border-pink-100 py-6 mt-12 text-center text-xs text-gray-500 font-bold relative z-10">
+        <div class="max-w-6xl mx-auto px-4 space-y-2">
+            <p class="text-brand-pink font-extrabold text-sm">حضانة طلائع الإيمان - الحرير الصناعي</p>
+            <p>للتواصل المباشر: 01113028718 - 01280445312 | رقم محفظة التحويل: 01287666213</p>
+            <p class="text-gray-400">© جميع الحقوق محفوظة لحضانة طلائع الإيمان</p>
+        </div>
+    </footer>
+
+    <script>
+        let studentsData = [
+            {
+                code: "TAL-101",
+                name: "أحمد محمود علي",
+                birthDate: "2021-05-12",
+                guardian: "محمود علي",
+                phone: "01113028718",
+                busSub: "yes",
+                busArea: "الحرير الصناعي - شارع 10",
+                paid: true,
+                daysLeft: 5,
+                photo: "https://via.placeholder.com/150?text=أحمد"
+            }
+        ];
+
+        function switchTab(tab) {
+            document.querySelectorAll('section').forEach(s => s.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(b => {
+                b.classList.remove('active');
+                b.classList.add('text-gray-600');
+            });
+            document.getElementById(`section-${tab}`).classList.remove('hidden');
+            const activeBtn = document.getElementById(`tab-${tab}`);
+            activeBtn.classList.add('active');
+            activeBtn.classList.remove('text-gray-600');
+            if(tab === 'admin') renderAdminTable();
+        }
+
+        function toggleBusLocationRequirement() {
+            const busOpt = document.getElementById('regBusOpt').value;
+            const container = document.getElementById('busAreaContainer');
+            const input = document.getElementById('regBusArea');
+            if (busOpt !== 'no') {
+                container.classList.remove('hidden');
+                input.setAttribute('required', 'required');
+            } else {
+                container.classList.add('hidden');
+                input.removeAttribute('required');
+                input.value = '';
+            }
+        }
+
+        function handleRegister(e) {
+            e.preventDefault();
+            const childName = document.getElementById('regChildName').value;
+            const birthDate = document.getElementById('regBirthDate').value;
+            const guardian = document.getElementById('regGuardian').value;
+            const phone = document.getElementById('regPhone').value;
+            const busOpt = document.getElementById('regBusOpt').value;
+            const busArea = document.getElementById('regBusArea').value;
+            const newCode = "TAL-" + (studentsData.length + 101);
+            
+            studentsData.push({
+                code: newCode,
+                name: childName,
+                birthDate: birthDate,
+                guardian: guardian,
+                phone: phone,
+                busSub: busOpt !== 'no' ? 'yes' : 'no',
+                busArea: busArea || '-',
+                paid: false,
+                daysLeft: 30,
+                photo: "https://via.placeholder.com/150?text=" + encodeURIComponent(childName)
+            });
+
+            const msg = `طلب تسجيل جديد - حضانة طلائع الإيمان%0Aاسم الطفل: ${childName}%0Aالكود: ${newCode}%0Aتاريخ الميلاد: ${birthDate}%0Aولي الأمر: ${guardian}%0Aرقم الهاتف: ${phone}%0Aالباص: ${busOpt !== 'no' ? 'نعم (' + busArea + ')' : 'لا'}`;
+            window.open(`https://wa.me/201287666213?text=${msg}`, '_blank');
+            alert(`تم إضافة الطلب بنجاح! كود الطالب الخاص بك هو: ${newCode}`);
+            switchTab('parent');
+            document.getElementById('studentCodeInput').value = newCode;
+            searchStudent();
+        }
+
+        function searchStudent() {
+            const code = document.getElementById('studentCodeInput').value.trim();
+            const student = studentsData.find(s => s.code.toLowerCase() === code.toLowerCase());
+            if (student) {
+                document.getElementById('displayChildName').innerText = student.name;
+                document.getElementById('displayStudentCode').innerText = "كود الطالب: " + student.code;
+                document.getElementById('displayBirthDate').innerText = student.birthDate;
+                document.getElementById('displayGuardian').innerText = student.guardian;
+                document.getElementById('displayBusStatus').innerText = student.busSub === 'yes' ? `مشترك (${student.busArea})` : 'غير مشترك';
+                document.getElementById('daysRemaining').innerText = student.daysLeft + " أيام";
+                if(student.photo) document.getElementById('childPhotoPreview').src = student.photo;
+            } else {
+                alert("لم يتم العثور على طالب بهذا الكود!");
+            }
+        }
+
+        function uploadChildPhoto(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('childPhotoPreview').src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function copyWallet() {
+            navigator.clipboard.writeText("01287666213");
+            alert("تم نسخ رقم محفظة التحويل (01287666213) بنجاح!");
+        }
+
+        function handlePaymentSubmit(e) {
+            e.preventDefault();
+            alert("تم إرسال إيصال التحويل للإدارة بنجاح!");
+        }
+
+        function scrollToPayment() {
+            document.getElementById('paymentSection').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function renderAdminTable() {
+            const tbody = document.getElementById('adminStudentsTable');
+            tbody.innerHTML = '';
+            studentsData.forEach(s => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-pink-50/45 transition-all";
+                tr.innerHTML = `
+                    <td class="p-3 font-bold text-brand-blue">${s.code}</td>
+                    <td class="p-3 font-black text-gray-800">${s.name}</td>
+                    <td class="p-3">${s.guardian}</td>
+                    <td class="p-3">${s.phone}</td>
+                    <td class="p-3">${s.busSub === 'yes' ? 'نعم' : 'لا'}</td>
+                    <td class="p-3 text-gray-500">${s.busArea}</td>
+                    <td class="p-3">
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold ${s.paid ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}">
+                            ${s.paid ? 'تم السداد' : 'مطلوب التجديد'}
+                        </span>
+                    </td>
+                    <td class="p-3 text-center">
+                        <button onclick="togglePaidStatus('${s.code}')" class="bg-pink-100 hover:bg-pink-200 text-brand-pink px-2.5 py-1 rounded-lg text-[11px] font-bold">
+                            تحديث الحالة
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function togglePaidStatus(code) {
+            const s = studentsData.find(st => st.code === code);
+            if(s) {
+                s.paid = !s.paid;
+                renderAdminTable();
+            }
+        }
+
+        function exportAllClientsToCSV() {
+            let csvContent = "\uFEFF";
+            csvContent += "كود الطالب,اسم الطفل,تاريخ الميلاد,اسم ولي الأمر,رقم الهاتف,اشتراك الباص,منطقة الباص,حالة السداد\n";
+            studentsData.forEach(s => {
+                const row = [
+                    `"${s.code}"`,
+                    `"${s.name}"`,
+                    `"${s.birthDate}"`,
+                    `"${s.guardian}"`,
+                    `"${s.phone}"`,
+                    `"${s.busSub === 'yes' ? 'مشترك' : 'غير مشترك'}"`,
+                    `"${s.busArea}"`,
+                    `"${s.paid ? 'تم السداد' : 'معلق'}"`
+                ];
+                csvContent += row.join(",") + "\n";
+            });
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.setAttribute("href", url);
+            link.setAttribute("download", `سجل_العملاء.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    </script>
+</body>
+</html>
